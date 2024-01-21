@@ -47,7 +47,7 @@
               </div>
           </div>`
         );
-      }
+        }
             // save button/
             $('#container').append(
                 `<div class="row ultimate-buttons-wrapper d-flex justify-content-end align-items-center border-0">
@@ -55,23 +55,23 @@
                   <button id="ultimate-clear" class="btn btn-outline-secondary rounded-0 text-uppercase">Clear</button>
                 </div>`
               );
-    }
+        }
     renderBlocks();
 
-        // SAVE callback
-        function saveTask() {
-            let icon = $(this).children('i');
-            // animate icon
-            icon.removeClass('fa-plus').addClass('fa-check saved');
-            let i = $(this).data('index');
-            let task = $(`textarea[data-index=${i}]`).val();
+    // SAVE callback
+    function saveTask() {
+        let icon = $(this).children('i');
+        // animate icon
+        icon.removeClass('fa-plus').addClass('fa-check saved');
+        let i = $(this).data('index');
+        let task = $(`textarea[data-index=${i}]`).val();
         
-            saveToLocal(i, task);
-            // return icon to default
+        saveToLocal(i, task);
+        // return icon to default
             setTimeout(() => {
               icon.removeClass('fa-check saved').addClass('fa-plus');
             }, 1000);
-          }
+        }
             // save to Local for event listeners
     function saveToLocal(i, task) {
         let date = dayjs().format('HH:00 DD/MM/YY');
@@ -90,92 +90,92 @@
           taskData[i].date = date;
         }
         localStorage.setItem('taskData', JSON.stringify(taskData));
-      }
+        }
 
- // chain event listeners
- $('#container')
- .on('click', '.save-button', saveTask)
- .on('keyup', 'textarea.daily-task', function (e) {
-   // on pressing enter from input, call function passing 'this' arguments
-   if (e.which === 13 && !e.shiftKey) {
-     e.stopPropagation();
-     e.preventDefault();
+    // chain event listeners
+    $('#container')
+    .on('click', '.save-button', saveTask)
+    .on('keyup', 'textarea.daily-task', function (e) {
+    // on pressing enter from input, call function passing 'this' arguments
+        if (e.which === 13 && !e.shiftKey) {
+         e.stopPropagation();
+         e.preventDefault();
      // unfocus input
-     $(this).blur();
-     saveTask.call(this);
-   }
- })
- .on('click', '.clear-button', function () {
-   let i = $(this).data('index');
-   let icon = $(this).children('i');
-   // animate icon
-   icon.removeClass('fa-circle-xmark').addClass('fa-check saved');
-   $(`textarea[data-index=${i}]`).val('');
-   let task = '';
-   saveToLocal(i, task);
-   setTimeout(() => {
-     icon.removeClass('fa-check saved').addClass('fa-circle-xmark');
-   }, 1000);
- });
+        $(this).blur();
+        saveTask.call(this);
+        }
+    })
+    .on('click', '.clear-button', function () {
+        let i = $(this).data('index');
+        let icon = $(this).children('i');
+    // animate icon
+        icon.removeClass('fa-circle-xmark').addClass('fa-check saved');
+        $(`textarea[data-index=${i}]`).val('');
+        let task = '';
+        saveToLocal(i, task);
+        setTimeout(() => {
+        icon.removeClass('fa-check saved').addClass('fa-circle-xmark');
+        }, 1000);
+    });
 
 // save
-$('main').on('click', '#ultimate-save', function () {
+    $('main').on('click', '#ultimate-save', function () {
  // show feedback on the button
- let saveAllBtn = $('#ultimate-save');
- saveAllBtn.prop('disabled', true).text('Wait...');
+        let saveAllBtn = $('#ultimate-save');
+        saveAllBtn.prop('disabled', true).text('Wait...');
  // save all
- $('textarea.daily-task').each(function () {
-   let i = $(this).data('index');
-   let task = $(this).val();
-   saveToLocal(i, task);
- });
- setTimeout(() => {
-   saveAllBtn.text('Saved!');
-   setTimeout(() => {
-     saveAllBtn.prop('disabled', false).text('Save');
-   }, 250);
- }, 500);
-});
+        $('textarea.daily-task').each(function () {
+        let i = $(this).data('index');
+        let task = $(this).val();
+        saveToLocal(i, task);
+        });
+        setTimeout(() => {
+         saveAllBtn.text('Saved!');
+         setTimeout(() => {
+         saveAllBtn.prop('disabled', false).text('Save');
+         }, 250);
+        }, 500);
+    });
 
 // clear
-$('#ultimate-clear').on('click', function () {
+    $('#ultimate-clear').on('click', function () {
  // create the dialog
- $('main').append(
-   `<div id="confirm-delete"><p>Are you sure you want to delete all tasks?</p></div>`
- );
+        $('main').append(
+        `<div id="confirm-delete"><p>Are you sure you want to delete all tasks?</p></div>`
+        );
  // jQuery dialog
- $('#confirm-delete').dialog({
-   resizable: false,
-   height: 'auto',
-   width: 400,
-   modal: true,
-   buttons: {
-     'Delete all tasks': function () {
-       localStorage.removeItem('taskData');
-       $('textarea').val('');
-       $(this).dialog('close').remove();
-     },
-     Cancel: function () {
-       $(this).dialog('close').remove();
-     },
-   },
- });
-});
+        $('#confirm-delete').dialog({
+            resizable: false,
+            height: 'auto',
+            width: 400,
+            modal: true,
+            buttons: {
+        'Delete all tasks': function () {
+            localStorage.removeItem('taskData');
+            $('textarea').val('');
+            $(this).dialog('close').remove();
+        },
+        Cancel: function () {
+            $(this).dialog('close').remove();
+        },
+        },
+        });
+    });
 
 
-        // main section height
-        let height = () => {
-            $('main').css({
-              'min-height': `calc( 100vh - ${
-                $('header').outerHeight() + $('footer').outerHeight(true)
+// main section height
+    let height = () => {
+        $('main').css({
+            'min-height': `calc( 100vh - ${
+            $('header').outerHeight() + $('footer').outerHeight(true)
               }px )`,
-            });
-          };
-          height();
-        
-          window.onresize = function () {
+             });
+            };
             height();
-          };
+        
+     window.onresize = function () {
+            height();
+            };
 
     
 })(jQuery);
