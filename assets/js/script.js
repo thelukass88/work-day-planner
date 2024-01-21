@@ -50,6 +50,19 @@
       }
     }
     renderBlocks();
+        // main section height
+        let height = () => {
+            $('main').css({
+              'min-height': `calc( 100vh - ${
+                $('header').outerHeight() + $('footer').outerHeight(true)
+              }px )`,
+            });
+          };
+          height();
+        
+          window.onresize = function () {
+            height();
+          };
 
     
 })(jQuery);
