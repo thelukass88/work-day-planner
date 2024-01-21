@@ -1,6 +1,6 @@
 (function ($) {
     // current date for user
-    $('#currentDay').text(dayjs().format('DD/MM/YYYY'));
+    $('#currentDay').text(dayjs().format('MMMM DD YYYY'));
     // current time (footer)
     let updateTime = () => {
       $('#currentTime').text(dayjs().format('HH:mm'));
@@ -58,6 +58,40 @@
     }
     renderBlocks();
 
+        // SAVE callback
+        function saveTask() {
+            let icon = $(this).children('i');
+            // animate icon
+            icon.removeClass('fa-plus').addClass('fa-check saved');
+            let i = $(this).data('index');
+            let task = $(`textarea[data-index=${i}]`).val();
+        
+            saveToLocal(i, task);
+            // return icon to default
+            setTimeout(() => {
+              icon.removeClass('fa-check saved').addClass('fa-plus');
+            }, 1000);
+          }
+            // save to Local for event listeners
+    function saveToLocal(i, task) {
+        let date = dayjs().format('HH:00 DD/MM/YY');
+    
+        // create new object if doesn't exist...
+        if (!taskData[i]) {
+          taskData[i] = {
+            blockTime: blocks[i],
+            task: task,
+            date: date,
+          };
+          // otherwise update values in the object
+        } else {
+          taskData[i].blockTime = blocks[i];
+          taskData[i].task = task;
+          taskData[i].date = date;
+        }
+        localStorage.setItem('taskData', JSON.stringify(taskData));
+      }
+
  // chain event listeners
  $('#container')
  .on('click', '.save-button', saveTask)
@@ -98,7 +132,7 @@ $('main').on('click', '#ultimate-save', function () {
  setTimeout(() => {
    saveAllBtn.text('Saved!');
    setTimeout(() => {
-     saveAllBtn.prop('disabled', false).text('Save all');
+     saveAllBtn.prop('disabled', false).text('Save');
    }, 250);
  }, 500);
 });
