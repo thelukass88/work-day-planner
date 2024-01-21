@@ -25,16 +25,28 @@
   </head>
 
   <body>
-    <header>
+    <header class="jumbotron mb-0 mt-5 mt-md-0 pb-4 pl-md-0">
       <h1 class="display-3">Work Day Scheduler</h1>
-      <p class="lead">A simple calendar app for scheduling your work day</p>
-      <p id="currentDay" class="lead"></p>
+      <p class="lead pl-1">
+        A simple calendar app for scheduling your work day
+      </p>
+      <div
+        class="time-wrapper d-flex justify-content-between align-items-center pt-5 pr-3 display-4">
+        <p id="currentDay"></p>
+      </div>
     </header>
-    <div class="container">
-      <!-- Timeblocks go here -->
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <main class="px-3 pl-md-0 pr-md-3">
+      <div id="container" class="container-fluid"></div>
+    </main>
+    <footer class="footer d-flex mt-5 pl-md-3">
+      <div class="container-fluid p-3 my-5 mx-auto">
+        <p id="currentTime"></p>
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="./assets/js/script.js"></script>
   </body>
+
 </html>
