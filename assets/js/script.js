@@ -42,7 +42,7 @@
                   <i class="fa-solid fa-plus"></i>
                 </button>
                 <button class="btn clear-button d-flex align-items-center justify-content-center w-100 h-100" data-index="${i}">
-                  <i class="fa-solid fa-trash-can"></i>
+                  <i class="fa-regular fa-circle-xmark"></i>
                 </button>
               </div>
           </div>`
@@ -109,12 +109,12 @@
    let i = $(this).data('index');
    let icon = $(this).children('i');
    // animate icon
-   icon.removeClass('fa-trash-can').addClass('fa-check saved');
+   icon.removeClass('fa-circle-xmark').addClass('fa-check saved');
    $(`textarea[data-index=${i}]`).val('');
    let task = '';
    saveToLocal(i, task);
    setTimeout(() => {
-     icon.removeClass('fa-check saved').addClass('fa-trash-can');
+     icon.removeClass('fa-check saved').addClass('fa-circle-xmark');
    }, 1000);
  });
 
