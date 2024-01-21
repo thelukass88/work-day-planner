@@ -1,9 +1,9 @@
 (function ($) {
     // current date for user
-    $('#currentDay').text(moment().format('LL'));
+    $('#currentDay').text(dayjs().format('DD/MM/YYYY'));
     // current time (footer)
     let updateTime = () => {
-      $('#currentTime').text(moment().format('HH:mm'));
+      $('#currentTime').text(dayjs().format('HH:mm'));
       // update hourly
       setInterval(updateTime, 60000);
     };
@@ -21,9 +21,9 @@
     // render blocks
     function renderBlocks() {
       for (let i = hours.start; i <= hours.end; i++) {
-        blocks.push(moment().hour(i).format('HH:00'));
+        blocks.push(dayjs().hour(i).format('HH:00'));
       }
-      let today = moment().format('LL');
+      let today = dayjs().format('MMMM DD YYYY');
       for (let i = 0; i < blocks.length; i++) {
         $('#container').append(
           `<div class="row">
@@ -48,8 +48,87 @@
           </div>`
         );
       }
+            // save button/
+            $('#container').append(
+                `<div class="row ultimate-buttons-wrapper d-flex justify-content-end align-items-center border-0">
+                  <button id="ultimate-save" class="btn btn-outline-primary rounded-0 text-uppercase mr-2">Save</button>
+                  <button id="ultimate-clear" class="btn btn-outline-secondary rounded-0 text-uppercase">Clear</button>
+                </div>`
+              );
     }
     renderBlocks();
+
+ // chain event listeners
+ $('#container')
+ .on('click', '.save-button', saveTask)
+ .on('keyup', 'textarea.daily-task', function (e) {
+   // on pressing enter from input, call function passing 'this' arguments
+   if (e.which === 13 && !e.shiftKey) {
+     e.stopPropagation();
+     e.preventDefault();
+     // unfocus input
+     $(this).blur();
+     saveTask.call(this);
+   }
+ })
+ .on('click', '.clear-button', function () {
+   let i = $(this).data('index');
+   let icon = $(this).children('i');
+   // animate icon
+   icon.removeClass('fa-trash-can').addClass('fa-check saved');
+   $(`textarea[data-index=${i}]`).val('');
+   let task = '';
+   saveToLocal(i, task);
+   setTimeout(() => {
+     icon.removeClass('fa-check saved').addClass('fa-trash-can');
+   }, 1000);
+ });
+
+// save
+$('main').on('click', '#ultimate-save', function () {
+ // show feedback on the button
+ let saveAllBtn = $('#ultimate-save');
+ saveAllBtn.prop('disabled', true).text('Wait...');
+ // save all
+ $('textarea.daily-task').each(function () {
+   let i = $(this).data('index');
+   let task = $(this).val();
+   saveToLocal(i, task);
+ });
+ setTimeout(() => {
+   saveAllBtn.text('Saved!');
+   setTimeout(() => {
+     saveAllBtn.prop('disabled', false).text('Save all');
+   }, 250);
+ }, 500);
+});
+
+// clear
+$('#ultimate-clear').on('click', function () {
+ // create the dialog
+ $('main').append(
+   `<div id="confirm-delete"><p>Are you sure you want to delete all tasks?</p></div>`
+ );
+ // jQuery dialog
+ $('#confirm-delete').dialog({
+   resizable: false,
+   height: 'auto',
+   width: 400,
+   modal: true,
+   buttons: {
+     'Delete all tasks': function () {
+       localStorage.removeItem('taskData');
+       $('textarea').val('');
+       $(this).dialog('close').remove();
+     },
+     Cancel: function () {
+       $(this).dialog('close').remove();
+     },
+   },
+ });
+});
+
+
         // main section height
         let height = () => {
             $('main').css({
