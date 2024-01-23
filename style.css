@@ -98,3 +98,43 @@ header {
 .time-wrapper {
   justify-content: space-around!important;
 }
+
+.row.past {
+  background-color: var(--secondary);
+  background: repeating-linear-gradient(
+    45deg,
+    var(--secondary),
+    var(--secondary) 2rem,
+    var(--primary) 2rem,
+    var(--primary) 3.5rem
+  );
+}
+
+.past textarea:focus,
+.past button:focus-visible {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--secondary),
+    var(--secondary) 2rem,
+    var(--primary) 2rem,
+    var(--primary) 3.5rem
+  );
+}
+
+.past textarea:not(:focus) {
+  opacity: 0.75;
+}
+
+.present,
+.present textarea,
+.present button {
+  background-color: var(--accent);
+  color: var(--white);
+}
+
+.future,
+.future textarea,
+.future button {
+  background-color: var(--primary);
+  color: var(--black);
+}

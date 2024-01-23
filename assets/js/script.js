@@ -48,8 +48,8 @@
           </div>`
         );
         }
-            // save button/
-            $('#container').append(
+         // save button/
+        $('#container').append(
                 `<div class="row ultimate-buttons-wrapper d-flex justify-content-end align-items-center border-0">
                   <button id="ultimate-save" class="btn btn-outline-primary rounded-0 text-uppercase mr-2">Save</button>
                   <button id="ultimate-clear" class="btn btn-outline-secondary rounded-0 text-uppercase">Clear</button>
@@ -58,7 +58,7 @@
         }
     renderBlocks();
 
-    // SAVE callback
+// SAVE callback
     function saveTask() {
         let icon = $(this).children('i');
         // animate icon
@@ -67,23 +67,22 @@
         let task = $(`textarea[data-index=${i}]`).val();
         
         saveToLocal(i, task);
-        // return icon to default
-            setTimeout(() => {
-              icon.removeClass('fa-check saved').addClass('fa-plus');
+// return icon to default
+        setTimeout(() => {
+            icon.removeClass('fa-check saved').addClass('fa-plus');
             }, 1000);
         }
-            // save to Local for event listeners
+// save to Local for event listeners
     function saveToLocal(i, task) {
         let date = dayjs().format('HH:00 DD/MM/YY');
-    
-        // create new object if doesn't exist...
+// create new object if doesn't exist...
         if (!taskData[i]) {
           taskData[i] = {
             blockTime: blocks[i],
             task: task,
             date: date,
           };
-          // otherwise update values in the object
+// otherwise update values in the object
         } else {
           taskData[i].blockTime = blocks[i];
           taskData[i].task = task;
@@ -120,10 +119,8 @@
 
 // save
     $('main').on('click', '#ultimate-save', function () {
- // show feedback on the button
         let saveAllBtn = $('#ultimate-save');
         saveAllBtn.prop('disabled', true).text('Wait...');
- // save all
         $('textarea.daily-task').each(function () {
         let i = $(this).data('index');
         let task = $(this).val();
@@ -162,6 +159,28 @@
         });
     });
 
+    function colorise() {
+        // get current time
+        let now = dayjs().format('HH');
+    
+        $('.row').each(function () {
+          // convert block time string to a moment object
+          let blockTime = dayjs($(this).find('.block-time').text(), 'hh A').format(
+            'HH'
+          );
+          let row = $(this).not('.ultimate-buttons-wrapper');
+          row.removeClass(['past', 'present', 'future']);
+          if (blockTime < now) {
+            row.addClass('past');
+          } else if (blockTime === now) {
+            row.addClass('present');
+          } else {
+            row.addClass('future');
+          }
+        });
+        // update colors for every hour
+      }
+      setTimeout(() => colorise(), 0);
 
 // main section height
     let height = () => {
