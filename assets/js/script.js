@@ -164,7 +164,7 @@
         let now = dayjs().format('HH');
     
         $('.row').each(function () {
-          // convert block time string to a moment object
+          // convert block time string to a dayjs object
           let blockTime = dayjs($(this).find('.block-time').text(), 'hh A').format(
             'HH'
           );
