@@ -196,5 +196,13 @@
             height();
             };
 
-    
+    function init() {
+        var localJson = localStorage.getItem("taskData")
+        var data = JSON.parse(localJson)
+        console.log(data)
+        //for loop below
+        var eightInput = $("[data-index='0']")
+        eightInput.val(data[0].task)
+    }
+    init();
 })(jQuery);
