@@ -159,28 +159,28 @@
         });
     });
 
+    // Colorise function
     function colorise() {
-        // get current time
-        let now = dayjs().format('HH');
-    
-        $('.row').each(function () {
-          // convert block time string to a dayjs object
-          let blockTime = dayjs($(this).find('.block-time').text(), 'hh A').format(
-            'HH'
-          );
-          let row = $(this).not('.ultimate-buttons-wrapper');
+      let now = dayjs().hour(); // Get the current hour
+      $('.daily-task').each(function () {
+          let index = $(this).data('index');
+          let blockHour = parseInt(blocks[index].substr(0, 2)); // Get the hour from the block time
+          let row = $(this).closest('.row');
           row.removeClass(['past', 'present', 'future']);
-          if (blockTime < now) {
-            row.addClass('past');
-          } else if (blockTime === now) {
-            row.addClass('present');
+          if (blockHour < now) {
+              row.addClass('past');
+          } else if (blockHour === now) {
+              row.addClass('present');
           } else {
-            row.addClass('future');
+              row.addClass('future');
           }
-        });
-        // update colors for every hour
-      }
-      setTimeout(() => colorise(), 0);
+      });
+  }
+
+  // Call colorise function initially
+  colorise();
+
+  // Set interval to update colors every hour
 
 // main section height
     let height = () => {
