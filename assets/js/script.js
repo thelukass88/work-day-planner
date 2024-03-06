@@ -170,7 +170,10 @@
           if (blockHour < now) {
               row.addClass('past');
           } else if (blockHour === now) {
-              row.addClass('present');
+              row.addClass('present').css({
+                  'background-color': 'green',
+                  'color': 'white'
+              });
           } else {
               row.addClass('future');
           }
