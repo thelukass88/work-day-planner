@@ -199,13 +199,59 @@
             height();
             };
 
-    function init() {
-        var localJson = localStorage.getItem("taskData")
-        var data = JSON.parse(localJson)
-        console.log(data)
-        //for loop below
-        var eightInput = $("[data-index='0']")
-        eightInput.val(data[0].task)
+  function init() {
+  // Retrieve task data from local storage
+    taskData = JSON.parse(localStorage.getItem('taskData')) || [];
+          
+    // Loop through taskData and set textarea values
+    taskData.forEach(function(item, index) {
+      var textarea = $(`textarea[data-index="${index}"]`);
+        if (textarea.length) {
+          textarea.val(item.task);
+        }
+        });
     }
     init();
+    // Function to update local storage when a task is edited
+    function updateLocalStorage(index, task) {
+      taskData[index].task = task; // Update the task in the taskData array
+      localStorage.setItem('taskData', JSON.stringify(taskData)); // Update local storage
+  }
+
+  // Chain event listeners
+  $('#container')
+      .on('click', '.save-button', saveTask)
+      .on('keyup', 'textarea.daily-task', function (e) {
+          // On pressing enter from input, call function passing 'this' arguments
+          if (e.which === 13 && !e.shiftKey) {
+              e.stopPropagation();
+              e.preventDefault();
+              // Unfocus input
+              $(this).blur();
+              saveTask.call(this);
+          }
+      })
+      .on('input', 'textarea.daily-task', function () {
+          // When user inputs text in textarea, update local storage
+          let index = $(this).data('index');
+          let task = $(this).val();
+          updateLocalStorage(index, task);
+      })
+      .on('click', '.clear-button', function () {
+          // Clear button functionality remains the same
+          let i = $(this).data('index');
+          let icon = $(this).children('i');
+          // Animate icon
+          icon.removeClass('fa-circle-xmark').addClass('fa-check saved');
+          $(`textarea[data-index=${i}]`).val('');
+          let task = '';
+          updateLocalStorage(i, task);
+          setTimeout(() => {
+              icon.removeClass('fa-check saved').addClass('fa-circle-xmark');
+          }, 1000);
+      });
+
+  // Save and clear button functionalities remain the same...
+
+
 })(jQuery);
