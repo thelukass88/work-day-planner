@@ -59,19 +59,24 @@
     renderBlocks();
 
 // SAVE callback
-    function saveTask() {
-        let icon = $(this).children('i');
-        // animate icon
-        icon.removeClass('fa-plus').addClass('fa-check saved');
-        let i = $(this).data('index');
-        let task = $(`textarea[data-index=${i}]`).val();
-        
-        saveToLocal(i, task);
-// return icon to default
-        setTimeout(() => {
-            icon.removeClass('fa-check saved').addClass('fa-plus');
-            }, 1000);
-        }
+function saveTask() {
+  let icon = $(this).children('i');
+  // animate icon
+  icon.removeClass('fa-plus').addClass('fa-check saved');
+  let i = $(this).data('index');
+  let task = $(`textarea[data-index=${i}]`).val();
+
+  // Return icon to default after 1 second
+  setTimeout(() => {
+      icon.removeClass('fa-check saved').addClass('fa-plus');
+  }, 1000);
+
+  // Store the task data only when the save button is clicked
+  $(`textarea[data-index=${i}]`).data('saved', true); // Mark textarea as saved
+
+  // Update taskData only if save button is clicked
+  updateLocalStorage(i, task);
+}
 // save to Local for event listeners
     function saveToLocal(i, task) {
         let date = dayjs().format('HH:00 DD/MM/YY');
@@ -199,23 +204,41 @@
             height();
             };
 
-  function init() {
-  // Retrieve task data from local storage
-    taskData = JSON.parse(localStorage.getItem('taskData')) || [];
+            function init() {
+              // Retrieve task data from local storage
+              taskData = JSON.parse(localStorage.getItem('taskData')) || [];
           
-    // Loop through taskData and set textarea values
-    taskData.forEach(function(item, index) {
-      var textarea = $(`textarea[data-index="${index}"]`);
-        if (textarea.length) {
-          textarea.val(item.task);
-        }
-        });
-    }
+              // Loop through taskData and set textarea values only if taskData contains data for the index
+              taskData.forEach(function(item, index) {
+                  if (item && item.task) {
+                      var textarea = $(`textarea[data-index="${index}"]`);
+                      if (textarea.length) {
+                          textarea.val(item.task);
+                      }
+                  }
+              });
+          }
     init();
     // Function to update local storage when a task is edited
     function updateLocalStorage(index, task) {
-      taskData[index].task = task; // Update the task in the taskData array
-      localStorage.setItem('taskData', JSON.stringify(taskData)); // Update local storage
+      // Only update local storage if the task has been saved
+      if ($(`textarea[data-index=${index}]`).data('saved')) {
+          let date = dayjs().format('HH:00 DD/MM/YY');
+          // Create new object if it doesn't exist...
+          if (!taskData[index]) {
+              taskData[index] = {
+                  blockTime: blocks[index],
+                  task: task,
+                  date: date,
+              };
+          } else {
+              // Otherwise update values in the object
+              taskData[index].blockTime = blocks[index];
+              taskData[index].task = task;
+              taskData[index].date = date;
+          }
+          localStorage.setItem('taskData', JSON.stringify(taskData));
+      }
   }
 
   // Chain event listeners
